@@ -37,12 +37,8 @@ flowchart TD
     ENERGY --> T7
 
     T7{Autonomia calculada\n>= 2.0 horas?}
-    T7 -- Sim --> ALLOK
+    T7 -- Sim --> READY
     T7 -- Não --> ABORT_T7[❌ FALHA: autonomia insuficiente]
-
-    ALLOK{Todas as verificações\naprovadas?}
-    ALLOK -- Sim --> READY
-    ALLOK -- Não --> ABORT_FINAL
 
     ABORT_T1 & ABORT_T2 & ABORT_T3 & ABORT_T4 & ABORT_T5 & ABORT_T6 & ABORT_T7 --> ABORT_FINAL
 
@@ -80,18 +76,25 @@ O algoritmo executa **7 verificações sequenciais**. Qualquer falha aciona imed
 | 6 | Módulos críticos | todos True | ESA Mars Express subsystems |
 | 7 | Autonomia energética | >= 2.0 horas | Calculado com η=0.92, Cap. 7 FIAP |
 
-### Arquitetura das funções Python (functional programming)
+---
 
-Cada linha do fluxograma corresponde a uma função pura no notebook:
+## Arquitetura das funções Python
+
+Cada verificação do fluxograma corresponde a uma função pura no notebook.
+Todas retornam `bool` sem efeitos colaterais.
 
 ```
-check_internal_temperature(value)  → bool
-check_external_temperature(value)  → bool
-check_structural_integrity(value)  → bool
-check_energy_level(value)          → bool
-check_tank_pressure(value)         → bool
-check_critical_modules(**modules)  → bool
-compute_energy_analysis(...)       → dict
-check_autonomy(autonomy_hours)     → bool
-verify_launch_readiness(...)       → str  ← "PRONTO PARA DECOLAR" | "DECOLAGEM ABORTADA"
+check_internal_temperature(value: float)          → bool
+check_external_temperature(value: float)          → bool
+check_structural_integrity(flag: int)             → bool
+check_energy_level(pct: float)                    → bool
+check_tank_pressure(bar: float)                   → bool
+check_critical_modules(propulsion, power, ...)    → bool
+compute_energy_analysis(...)                      → EnergyAnalysis
+check_autonomy(autonomy_hours: float)             → bool
+verify_launch_readiness(reading, autonomy_hours)  → Tuple[str, Dict[str, bool]]
 ```
+
+A função `verify_launch_readiness` retorna a tupla `(decision, checks)` onde
+`decision` é `"PRONTO PARA DECOLAR"` ou `"DECOLAGEM ABORTADA"` e
+`checks` é o mapa individual de cada verificação para auditoria.
