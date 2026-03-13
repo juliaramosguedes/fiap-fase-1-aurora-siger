@@ -52,7 +52,7 @@ git clone https://github.com/<seu-usuario>/aurora-siger.git
 cd aurora-siger
 
 # 2. Instale as dependências
-pip install notebook
+pip install notebook numpy pandas scikit-learn
 ```
 
 ### Executando o notebook
@@ -67,6 +67,25 @@ Na interface que abrir no navegador:
 - **Menu:** `Kernel → Restart & Run All`
 
 A primeira célula de código verificará automaticamente se todas as dependências estão disponíveis e informará caso alguma esteja faltando.
+
+### Alternativa — JupyterLab
+
+```bash
+pip install jupyterlab
+jupyter lab aurora_siger.ipynb
+```
+
+### Alternativa — VS Code / Cursor
+
+Abra `aurora_siger.ipynb` diretamente no VS Code ou Cursor com a extensão **Jupyter** instalada. Use o botão **Run All** no topo do arquivo.
+
+---
+
+## Resultado da execução
+
+![Aurora SIGER – Final Pre-Launch Report](assets/pre-launch-report.png)
+
+---
 
 ## Fontes dos dados de telemetria
 
@@ -83,6 +102,19 @@ Os valores e faixas seguras foram derivados de datasets e documentação reais:
 | Padrão de anomalias para IA | NASA SMAP/MSL — Hundman et al., KDD 2018 |
 
 Valores marcados como `# SIMULATED` no notebook foram criados com base em ordens de grandeza documentadas. Consulte `telemetry_reference.md` para detalhes completos.
+
+---
+
+## Seções do relatório
+
+| # | Seção | O que implementa |
+|---|---|---|
+| 1 | Telemetria | Leitura e apresentação dos dados da nave |
+| 2 | Algoritmo | Fluxograma de decisão em Mermaid |
+| 3 | Script Python | Funções de verificação (functional programming) |
+| 4 | Análise energética | Cálculo de autonomia com η, FC e P=I²R |
+| 5 | Análise por IA | IsolationForest + LogisticRegression (scikit-learn) |
+| 6 | Reflexão crítica | Ética, impacto social e sustentabilidade |
 
 ---
 
