@@ -9,7 +9,7 @@
 
 ---
 
-![verificações](https://img.shields.io/badge/VERIFICAÇÕES-7-5dade2?labelColor=0a0f1e&logo=alienware&logoColor=c5d8f0) ![modelos](https://img.shields.io/badge/MODELOS_IA-2-a569bd?labelColor=0a0f1e&logo=anthropic&logoColor=c5d8f0) ![decisão](https://img.shields.io/badge/DECISÃO-1-FFE200?labelColor=0a0f1e&logo=nasa&logoColor=c5d8f0) ![Status](https://img.shields.io/badge/STATUS-PRONTO_PARA_DECOLAR-52be80?logo=startrek&labelColor=0a0f1e&logoColor=c5d8f0)
+![verificações](https://img.shields.io/badge/VERIFICAÇÕES-7-5dade2?labelColor=0a0f1e&logo=nasa&logoColor=c5d8f0) ![modelos](https://img.shields.io/badge/MODELOS_IA-2-a569bd?labelColor=0a0f1e&logo=anthropic&logoColor=c5d8f0) ![decisão](https://img.shields.io/badge/DECISÃO-1-FFE200?labelColor=0a0f1e&logo=alienware&logoColor=c5d8f0) ![Status](https://img.shields.io/badge/STATUS-PRONTO_PARA_DECOLAR-52be80?logo=startrek&labelColor=0a0f1e&logoColor=c5d8f0)
 
 
 Sistema de verificação de pré-decolagem de uma nave espacial interplanetária. Recebe dados de telemetria e emite uma decisão binária — **PRONTO PARA DECOLAR** ou **DECOLAGEM ABORTADA** — seguida de uma avaliação de risco por dois modelos de machine learning.
