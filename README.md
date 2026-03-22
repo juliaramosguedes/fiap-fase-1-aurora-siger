@@ -1,6 +1,7 @@
 # ☄️ Aurora Siger — Relatório de Pré-Decolagem
 
-![Python](https://img.shields.io/badge/PYTHON-3.9+-3776AB?labelColor=0a0f1e&logo=python&logoColor=c5d8f0) ![Jupyter](https://img.shields.io/badge/JUPYTER-1.0-F37626?labelColor=0a0f1e&logo=jupyter&logoColor=c5d8f0) ![scikit-learn](https://img.shields.io/badge/SCIKIT--LEARN-1.3-F7931E?labelColor=0a0f1e&logo=scikit-learn&logoColor=c5d8f0)
+[![Open in Colab](https://img.shields.io/badge/COLAB-OPEN_IN-F9AB00?labelColor=0a0f1e&logo=googlecolab&logoColor=c5d8f0)](https://colab.research.google.com/github/juliaramosguedes/fiap-fase-1-aurora-siger/blob/main/aurora_siger_report.ipynb) ![Python](https://img.shields.io/badge/PYTHON-3.9+-3776AB?labelColor=0a0f1e&logo=python&logoColor=c5d8f0) ![Jupyter](https://img.shields.io/badge/JUPYTER-1.0-F37626?labelColor=0a0f1e&logo=jupyter&logoColor=c5d8f0) ![scikit-learn](https://img.shields.io/badge/SCIKIT--LEARN-1.3-F7931E?labelColor=0a0f1e&logo=scikit-learn&logoColor=c5d8f0) 
+
 
 *Atividade Integradora · Fase 1 · Ciência da Computação, 2026 — FIAP*
 
