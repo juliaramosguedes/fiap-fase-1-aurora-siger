@@ -2,9 +2,9 @@
 
 ![Python](https://img.shields.io/badge/PYTHON-3.9+-3776AB?labelColor=0a0f1e&logo=python&logoColor=c5d8f0) ![Jupyter](https://img.shields.io/badge/JUPYTER-1.0-F37626?labelColor=0a0f1e&logo=jupyter&logoColor=c5d8f0) ![scikit-learn](https://img.shields.io/badge/SCIKIT--LEARN-1.3-F7931E?labelColor=0a0f1e&logo=scikit-learn&logoColor=c5d8f0)
 
-*Atividade Integradora · Fase 1 · Ciência da Computação — FIAP*
+*Atividade Integradora · Fase 1 · Ciência da Computação, 2026 — FIAP*
 
-**Autores:** Julia Ramos · Carlos Eugenio · Julio Guma · Matheus Fuchens
+🧑‍🚀 [Julia Ramos](https://www.linkedin.com/in/juliaramosguedes) · [Carlos Eugenio](https://www.linkedin.com/in/carloseugenioandrade/) · [Matheus Fuchens](https://www.linkedin.com/in/matheus-fuchelberguer-neves/) · Julio Guma
 
 ---
 
@@ -14,7 +14,7 @@
 Sistema de verificação de pré-decolagem de uma nave espacial interplanetária. Recebe dados de telemetria e emite uma decisão binária — **PRONTO PARA DECOLAR** ou **DECOLAGEM ABORTADA** — seguida de uma avaliação de risco por dois modelos de machine learning.
 
 > [!CAUTION]
-> *Porque lançar sem checklist é só uma forma cara de criar destroços a 400 km de altitude.*
+> *Porque **sem checklist, a gravidade toma a decisão** por você — e ela não consulta a tripulação.* 💥
 
 ---
 
@@ -31,7 +31,7 @@ Telemetria → Limiares de segurança → 7 verificações → Análise energét
 5. **IA** — IsolationForest + DecisionTree em paralelo; resultados comparados para consenso
 
 > [!IMPORTANT]
-> O algoritmo não negocia. Cada etapa em sequência — a primeira falha e a missão fica em terra:
+> Resistência é inútil. Cada etapa em sequência — a primeira falha suspende a decolagem:
 
 ```mermaid
 flowchart TD
@@ -119,11 +119,11 @@ flowchart TD
 
 **Funções puras** — sem efeitos colaterais; mesmo input sempre produz mesmo output. Cada verificação é testável individualmente — mandatório em sistemas de segurança crítica.
 
-**Imutabilidade** — `TelemetryReading` e `EnergyAnalysis` são snapshots em T-0. `frozen=True` é um invariante de segurança: dados de telemetria não podem ser alterados após a leitura.
+**Imutabilidade** — `TelemetryReading` e `EnergyAnalysis` são snapshots no instante da verificação. `frozen=True` é um invariante de segurança: dados de telemetria não podem ser alterados após a leitura.
 
-**Fonte única da verdade** — os limiares de segurança são definidos uma vez na Seção 3 e reutilizados tanto nas verificações quanto no treinamento da IA. Uma mudança propaga para o sistema inteiro.
+**Fonte única da verdade** — os limiares de segurança são definidos uma vez na Seção 2 e reutilizados tanto nas verificações quanto no treinamento da IA. Uma mudança propaga para o sistema inteiro.
 
-**Estratégia fail-fast** — as 7 verificações rodam em sequência; a primeira falha aborta imediatamente. Padrão clássico de sistemas críticos.
+**Estratégia fail-fast** — as 7 verificações rodam em sequência; a primeira falha aborta imediatamente. Padrão clássico de sistemas críticos. A lógica é inflexível.
 
 **Redundância por consenso** — dois modelos independentes (supervisionado + não supervisionado) rodam em paralelo; o risco só é classificado como baixo quando há concordância. Reduz falsos negativos sem depender de um único ponto de falha.
 
@@ -148,32 +148,34 @@ O padrão de anomalia deste problema é uma disjunção de condições por featu
 
 ```
 ============================================================
-AURORA SIGER — PRE-LAUNCH TELEMETRY SNAPSHOT
+🛰  TELEMETRIA DE PRÉ-DECOLAGEM - AURORA SIGER
+    Sensores a postos. Leituras nominais recebidas.
 ============================================================
-  Internal temperature :     22.5 °C
-  External temperature :    -45.0 °C
-  Structural integrity :        1   (1=OK, 0=FAIL)
-  Energy level         :     87.3 %
-  Tank pressure        :     34.8 bar
-  Propulsion system    :       OK
-  Power management     :       OK
-  Communications       :       OK
-  Thermal control      :       OK
-  Navigation / ADCS    :       OK
+  Temperatura interna   :     22.5 °C
+  Temperatura externa   :    -45.0 °C
+  Integridade estrutural:        1   (1=OK, 0=FALHA)
+  Nível de energia      :     87.3 %
+  Pressão dos tanques   :     34.8 bar
+  Propulsão             :       OK
+  Gestão de energia     :       OK
+  Comunicações          :       OK
+  Controle térmico      :       OK
+  Navegação / ADCS      :       OK
 ============================================================
 ============================================================
-PRE-LAUNCH VERIFICATION CHECKLIST
+🔍 CHECKLIST DE PRÉ-DECOLAGEM
 ============================================================
-  ✅  Internal Temperature           PASS
-  ✅  External Temperature           PASS
-  ✅  Structural Integrity           PASS
-  ✅  Energy Level                   PASS
-  ✅  Tank Pressure                  PASS
-  ✅  Critical Modules               PASS
-  ✅  Autonomy                       PASS
+  ✔︎  Temperatura interna            OK
+  ✔︎  Temperatura externa            OK
+  ✔︎  Integridade estrutural         OK
+  ✔︎  Nível de energia               OK
+  ✔︎  Pressão dos tanques            OK
+  ✔︎  Módulos críticos               OK
+  ✔︎  Autonomia                      OK
 ============================================================
 
   >>> PRONTO PARA DECOLAR <<<
+  Pré-decolagem concluída. Tripulação, a seus postos. Vamos voar! 🚀
 
 ============================================================
 ```
@@ -182,21 +184,44 @@ PRE-LAUNCH VERIFICATION CHECKLIST
 
 ```
 ============================================================
-AI RISK ASSESSMENT — AURORA SIGER
+☄️  AVALIAÇÃO DE RISCO — AURORA SIGER
 ============================================================
-  Data classification
-    IsolationForest (unsupervised) : NOMINAL
-    DecisionTree    (supervised)   : NOMINAL
-    Model consensus               : YES
+  Classificação dos dados
+    IsolationForest (não supervisionado) : NOMINAL
+    DecisionTree    (supervisionado)   : NOMINAL
+    Consenso entre modelos         : SIM
 
-  Anomaly identification
-    Anomaly probability           : 0.0%
-    IsolationForest recall        : 94.8%
-    DecisionTree recall           : 100.0%  (CV 5-fold: 99.8% ± 0.4%)
+  Identificação de anomalia
+    Probabilidade de anomalia     : 0.0%
+    Recall IsolationForest        : 94.8%
+    Recall DecisionTree (CV 5-fold): 99.8% ± 0.4%
 
-  Risk suggestion
-    Risk level                    : LOW
-    Recommended action            : PROCEED WITH CAUTION
+  Avaliação de risco
+    Nível de risco               : BAIXO
+    Ação recomendada             : PROSSEGUIR COM CAUTELA
+
+============================================================
+  NOTA: A análise de IA é apenas suporte. A decisão final
+  cabe ao operador humano. Sistemas automatizados não devem
+  sobrepor o juízo humano em contextos de segurança crítica.
+============================================================
+```
+
+**Relatório final de missão:**
+
+```
+============================================================
+  ☄️  AURORA SIGER — RELATÓRIO FINAL DE MISSÃO
+============================================================
+  Energia disponível   : 96.38 kWh
+  Autonomia            : 11.34 h
+  IsolationForest      : NOMINAL
+  DecisionTree         : NOMINAL
+  Prob. de anomalia    : 0.0%
+
+============================================================
+  >>> PRONTO PARA DECOLAR <<<
+  O universo espera. Boa viagem, Aurora Siger. Vida longa e próspera. 🖖
 ============================================================
 ```
 
@@ -248,7 +273,8 @@ fiap-fase-1-aurora-siger/
 | Padrão de anomalias para IA | NASA SMAP/MSL — Hundman et al., KDD 2018 |
 
 > [!NOTE]
-> Valores marcados como `# SIMULATED` no código foram estimados com base em ordens de grandeza documentadas. Consulte [`telemetry.md`](telemetry.md) para as justificativas completas.
+> Valores marcados como `# SIMULATED` no código foram estimados com base em ordens de grandeza documentadas.
+> Consulte [`telemetry.md`](telemetry.md) para as justificativas completas.
 
 ---
 
@@ -264,7 +290,7 @@ Outra prática ética presente no código: valores sem dataset de origem são ma
 
 ### Sustentabilidade tecnológica
 
-Este projeto carrega uma contradição interna: a Seção 4 calcula eficiência energética (η, perdas I²R, autonomia em horas) enquanto a Seção 5 treina modelos de machine learning — que também consomem energia para operar. Não é apenas uma tensão abstrata: ela existe dentro do próprio notebook.
+Este projeto carrega uma contradição interna: a Seção 3 calcula eficiência energética (η, perdas I²R, autonomia em horas) enquanto a Seção 4 treina modelos de machine learning — que também consomem energia para operar. Não é apenas uma tensão abstrata: ela existe dentro do próprio notebook.
 
 Em escala global, data centers já respondem por ~2% do consumo elétrico (The Green Grid, 2023), e esse percentual cresce com IA e big data. O PROCEL evitou 140 milhões de toneladas de CO₂ entre 1990 e 2022. O IPCC (2023) projeta que eficiência energética pode contribuir com 40% da redução de emissões até 2030. A computação que mede eficiência precisa também ser medida por ela.
 
@@ -276,9 +302,9 @@ O lixo eletrônico é um elo dessa cadeia frequentemente invisível. O Brasil ge
 
 ### Consideração final
 
-Toda simulação carrega uma tensão entre a precisão do modelo e a imprecisão das premissas. Aurora Siger atinge 99,8% de recall na classificação de anomalias — mas parte dos parâmetros de entrada são estimativas de ordem de grandeza. A precisão matemática não apaga a incerteza das premissas. Documentar essa incerteza honestamente não é uma limitação do projeto: é sua prática ética mais concreta.
+Toda simulação carrega uma tensão entre a precisão do modelo e a imprecisão das premissas. Aurora Siger atinge 99,8% de recall na classificação de anomalias — mas parte dos parâmetros de entrada são estimativas de ordem de grandeza. A precisão matemática não apaga a incerteza das premissas. Documentar essa incerteza honestamente não é uma limitação do projeto: é sua prática ética mais concreta. O universo é grande — as premissas, inevitavelmente menores.
 
 Construir sistemas que tomam decisões críticas exige não apenas domínio técnico, mas consciência de que os dados têm origem, os modelos têm premissas, e as escolhas de design — recall sobre precision, auditabilidade sobre opacidade, transparência sobre resultado — são sempre escolhas de valores.
 
 > [!IMPORTANT]
-> Essa é a formação que a Fase 1 da FIAP propõe — e que este relatório procura demonstrar.
+> *A lógica é o começo da sabedoria, não o fim.* 🖖
