@@ -1,8 +1,10 @@
-# Telemetria de Referência — Missão Aurora Siger
+# 📡 Telemetria de Referência — Missão Aurora Siger
 
 > Documento de fundação para o Relatório Operacional de Pré-Decolagem.
 > Define os valores simulados de telemetria, faixas seguras e módulos críticos,
 > com fonte declarada para cada parâmetro.
+>
+> Valores sem dataset específico são declarados como **simulados** — a transparência sobre o que é real e o que é ordem de grandeza é parte do design.
 
 ---
 
@@ -93,7 +95,8 @@
 
 **Fonte dos limites:** NASA SBIR Spacecraft Thermal Management — "200 psia maximum expected operating pressure" (~13.8 bar) como referência de pressão de fluido de trabalho. Faixa expandida para propulsão principal com base em ordem de grandeza de motores de missão interplanetária. Os valores específicos são **simulados** com justificativa de escala física.
 
-> **Nota de transparência:** pressão de tanques de propulsão é o parâmetro com menor cobertura em datasets públicos de telemetria. Os limites acima são simulados com base em ordens de grandeza documentadas, não em dados históricos de missão específica.
+> [!NOTE]
+> Pressão de tanques é o parâmetro com menor cobertura em datasets públicos de telemetria espacial. Os limites acima são simulados com base em ordens de grandeza documentadas, não em dados históricos de missão específica.
 
 ---
 
@@ -123,7 +126,7 @@ Os módulos abaixo são derivados da estrutura de subsistemas documentada na tel
 | Fator de perda (η_perda) | 0.08 (8%) | Cap. 7 FIAP — P = I²×R; ESA MEX degradação de bateria |
 | Rendimento do sistema (η) | 0.92 (92%) | Tabela 1 Cap. 7 FIAP — servidor otimizado: 80–88%; nave com sistemas novos: 92% |
 
-**Fórmulas a implementar (Cap. 7 FIAP):**
+**Fórmulas implementadas (Cap. 7 FIAP) — ver `compute_energy_analysis` no notebook:**
 ```
 carga_atual_kwh  = capacidade_total_kwh × (carga_pct / 100)
 energia_util     = carga_atual_kwh × rendimento
@@ -132,19 +135,19 @@ autonomia_horas  = energia_util / consumo_decolagem_kw
 
 ---
 
-## 4. Resumo das decisões de design
+## 4. Decisões de modelagem
+
+Decisões não óbvias que afetam a interpretação dos dados:
 
 | Decisão | Escolha | Justificativa |
 |---|---|---|
-| Número de módulos | 5 | Subsistemas primários do Mars Express (ESA) |
-| Tipo de integridade estrutural | Flag binário 0/1 | Modelo `right_flag` do MEX dataset |
-| Unidade de pressão | bar | Conversão de psia para SI; mais comum em literatura europeia (ESA) |
-| Capacidade energética | 120 kWh (simulado) | Ordem de grandeza documentada; declarado explicitamente como simulado |
-| Limites de energia mínima | 60% | Margem de segurança operacional — ESA Advanced Concepts Team |
+| Unidade de pressão | bar | Conversão de psia para SI; literatura ESA usa SI |
+| Capacidade energética | 120 kWh (simulado) | Ordem de grandeza de satélite médio porte; declarado `# SIMULATED` |
+| Rendimento η | 92% | Tabela 1 Cap. 7 FIAP — sistemas novos; degradação modelada pelo fator de perda |
+| Fator de perda | 8% | Cap. 7 FIAP: P = I²×R aplicado como fração da carga total |
 | Dataset de IA | NASA SMAP/MSL | Único dataset público com anomalias anotadas em telemetria real de nave |
 
 ---
 
-*Documento gerado como fundação para o Relatório Operacional de Pré-Decolagem — Missão Aurora Siger.*
-*FIAP — Ciência da Computação, 2025/2026.*
-*Participantes: Julia Ramos, Carlos Eugenio, Julio Guma, Matheus Fuchens.*
+*Missão Aurora Siger · FIAP — Ciência da Computação, 2026*
+*Julia Ramos · Carlos Eugenio · Julio Guma · Matheus Fuchens*

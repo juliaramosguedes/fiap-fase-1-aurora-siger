@@ -1,69 +1,150 @@
-# 🚀 Missão Aurora Siger
+# ☄️ Aurora Siger — Relatório de Pré-Decolagem
 
-## Relatório Operacional de Pré-Decolagem
+![Python](https://img.shields.io/badge/PYTHON-3.9+-3776AB?labelColor=0a0f1e&logo=python&logoColor=c5d8f0) ![Jupyter](https://img.shields.io/badge/JUPYTER-1.0-F37626?labelColor=0a0f1e&logo=jupyter&logoColor=c5d8f0) ![scikit-learn](https://img.shields.io/badge/SCIKIT--LEARN-1.3-F7931E?labelColor=0a0f1e&logo=scikit-learn&logoColor=c5d8f0)
 
-*Atividade Integradora — Fase 1 | Ciência da Computação — FIAP*
+*Atividade Integradora · Fase 1 · Ciência da Computação — FIAP*
 
-**Julia Ramos · Carlos Eugenio · Julio Guma · Matheus Fuchens**
-
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-1.24+-013243?logo=numpy&logoColor=white) ![pandas](https://img.shields.io/badge/Pandas-2.0+-150458?logo=pandas&logoColor=white) ![Jupyter](https://img.shields.io/badge/Jupyter-1.0-F37626?logo=jupyter&logoColor=white) ![scikit-learn](https://img.shields.io/badge/Scikit--Learn-1.3-F7931E?logo=scikit-learn&logoColor=white)
+**Autores:** Julia Ramos · Carlos Eugenio · Julio Guma · Matheus Fuchens
 
 ---
 
-## Sobre o projeto
+![verificações](https://img.shields.io/badge/VERIFICAÇÕES-7-5dade2?labelColor=0a0f1e&logo=alienware&logoColor=c5d8f0) ![modelos](https://img.shields.io/badge/MODELOS_IA-2-a569bd?labelColor=0a0f1e&logo=anthropic&logoColor=c5d8f0) ![decisão](https://img.shields.io/badge/DECISÃO-1-FFE200?labelColor=0a0f1e&logo=nasa&logoColor=c5d8f0) ![Status](https://img.shields.io/badge/STATUS-PRONTO_PARA_DECOLAR-52be80?logo=startrek&labelColor=0a0f1e&logoColor=c5d8f0)
 
-Aurora Siger simula o sistema de verificação de pré-decolagem de uma nave espacial interplanetária. Antes de qualquer lançamento real, engenheiros executam uma checklist técnica para confirmar que todos os subsistemas estão dentro dos limites operacionais seguros. Este projeto replica esse processo em software.
 
-O sistema recebe dados de telemetria da nave e produz uma decisão binária:
+Sistema de verificação de pré-decolagem de uma nave espacial interplanetária. Recebe dados de telemetria e emite uma decisão binária — **PRONTO PARA DECOLAR** ou **DECOLAGEM ABORTADA** — seguida de uma avaliação de risco por dois modelos de machine learning.
 
-```
-PRONTO PARA DECOLAR   ou   DECOLAGEM ABORTADA
-```
-
-Além da verificação determinística, dois modelos de machine learning analisam se a leitura atual se parece com missões históricas nominais ou com missões que apresentaram anomalias — e emitem uma avaliação de risco.
+> [!CAUTION]
+> *Porque lançar sem checklist é só uma forma cara de criar destroços a 400 km de altitude.*
 
 ---
 
-## Como funciona
-
-A pipeline segue uma sequência onde cada etapa depende da anterior:
+## 🛰 Pipeline
 
 ```
-Telemetria → Limiares de segurança → Verificações → Análise energética → Decisão → IA
+Telemetria → Limiares de segurança → 7 verificações → Análise energética → Decisão → IA
 ```
 
-**Telemetria** — os dados de entrada: temperaturas interna e externa, integridade estrutural (flag binário 0/1), nível de energia (%), pressão dos tanques e status dos 5 subsistemas críticos.
+1. **Telemetria** — lê temperaturas, integridade estrutural, nível de energia, pressão dos tanques e status dos 5 subsistemas críticos
+2. **Limiares de segurança** — constantes nomeadas derivadas de dados NASA/ESA; única fonte de verdade do sistema, reutilizada tanto nas verificações quanto no treinamento da IA
+3. **Verificações** — 7 funções puras retornando `bool`; estratégia fail-fast: a primeira falha aborta imediatamente
+4. **Análise energética** — calcula carga atual, perdas resistivas (I²R), eficiência η e autonomia em horas
+5. **IA** — IsolationForest + DecisionTree em paralelo; resultados comparados para consenso
 
-**Limiares de segurança** — constantes nomeadas derivadas de dados reais (MIT OCW, ESA Bulletin 87, ESA Advanced Concepts Team). São a **única fonte de verdade** do sistema: usadas tanto nas verificações quanto no treinamento dos modelos de IA.
+> [!IMPORTANT]
+> O algoritmo não negocia. Cada etapa em sequência — a primeira falha e a missão fica em terra:
 
-**Verificações** — 7 funções puras, uma por parâmetro, cada uma retornando `bool`. A função `verify_launch_readiness` consolida tudo e emite a decisão final.
+```mermaid
+flowchart TD
+    START([🚀 Início]) --> READ[/Leitura da telemetria/]
+    READ --> CHECKS{7 verificações\nsequenciais}
+    CHECKS -->|❌ primeira falha| ABORT([🛑 DECOLAGEM ABORTADA])
+    CHECKS -->|✅ todas passam| ENERGY[Análise energética\nη · carga / consumo]
+    ENERGY --> AUTO{Autonomia ≥ 2 h?}
+    AUTO -->|não| ABORT
+    AUTO -->|sim| READY([✅ PRONTO PARA DECOLAR])
 
-**Análise energética** — calcula carga atual, perdas resistivas (P = I²R), eficiência do sistema (η) e autonomia em horas com base nos parâmetros da nave.
+    style START fill:#1a1a2e,color:#fff,stroke:#4a90d9
+    style READ fill:#16213e,color:#fff,stroke:#4a90d9
+    style CHECKS fill:#1a2040,color:#fff,stroke:#4a90d9
+    style AUTO fill:#1a2040,color:#fff,stroke:#4a90d9
+    style ENERGY fill:#1a2a3d,color:#fff,stroke:#f39c12
+    style READY fill:#0a3d0a,color:#fff,stroke:#2ecc71,stroke-width:3px
+    style ABORT fill:#3d0a0a,color:#fff,stroke:#e74c3c,stroke-width:3px
+```
 
-**Análise por IA** — dois modelos com abordagens complementares, escolhidos deliberadamente:
+<details>
+<summary>🔍 Fluxograma detalhado — verificação por parâmetro</summary>
 
-- **IsolationForest** (não supervisionado): aprende o padrão nominal e detecta qualquer desvio sem precisar de anomalias históricas rotuladas. Em operações espaciais, anomalias rotuladas são raras — esse modelo é mais robusto nesse cenário. Atingiu **recall de 94,8%**.
-- **DecisionTreeClassifier** (supervisionado): aprende regras if-then a partir dos dados históricos — a mesma estrutura lógica do checklist da Seção 3. O modelo redescobre autonomamente os limiares de segurança codificados à mão, criando uma ponte direta entre a abordagem determinística e a abordagem de Machine Learning. Atingiu **recall de 99,8% (CV 5-fold)**.
+```mermaid
+flowchart TD
+    START([🚀 INÍCIO — Verificação de Pré-Decolagem]) --> READ
 
-Usar os dois e comparar o consenso é mais confiável do que depender de um único modelo. Em sistemas de segurança crítica, **recall é a métrica prioritária**: um falso negativo — anomalia não detectada — é mais perigoso que um abort desnecessário.
+    READ[/Leitura dos dados de telemetria\] --> T1
+
+    T1{Temperatura interna\nentre -20°C e +70°C?}
+    T1 -- Sim --> T2
+    T1 -- Não --> ABORT_T1[❌ FALHA: temp_interna fora da faixa]
+
+    T2{Temperatura externa\nentre -100°C e +125°C?}
+    T2 -- Sim --> T3
+    T2 -- Não --> ABORT_T2[❌ FALHA: temp_externa fora da faixa]
+
+    T3{Integridade estrutural\n== 1?}
+    T3 -- Sim --> T4
+    T3 -- Não --> ABORT_T3[❌ FALHA: integridade estrutural comprometida]
+
+    T4{Nível de energia\n>= 60%?}
+    T4 -- Sim --> T5
+    T4 -- Não --> ABORT_T4[❌ FALHA: energia insuficiente para decolagem]
+
+    T5{Pressão dos tanques\nentre 20 bar e 40 bar?}
+    T5 -- Sim --> T6
+    T5 -- Não --> ABORT_T5[❌ FALHA: pressão dos tanques fora da faixa]
+
+    T6{Todos os módulos\ncríticos ativos?}
+    T6 -- Sim --> ENERGY
+    T6 -- Não --> ABORT_T6[❌ FALHA: módulo crítico inativo]
+
+    ENERGY[Cálculo de Análise Energética\ncarga_kwh · rendimento / consumo]
+    ENERGY --> T7
+
+    T7{Autonomia calculada\n>= 2.0 horas?}
+    T7 -- Sim --> READY
+    T7 -- Não --> ABORT_T7[❌ FALHA: autonomia insuficiente]
+
+    ABORT_T1 & ABORT_T2 & ABORT_T3 & ABORT_T4 & ABORT_T5 & ABORT_T6 & ABORT_T7 --> ABORT_FINAL
+
+    READY([✅ PRONTO PARA DECOLAR])
+    ABORT_FINAL([🛑 DECOLAGEM ABORTADA])
+
+    style START fill:#1a1a2e,color:#fff,stroke:#4a90d9
+    style READ fill:#16213e,color:#fff,stroke:#4a90d9
+    style READY fill:#0a3d0a,color:#fff,stroke:#2ecc71,stroke-width:3px
+    style ABORT_FINAL fill:#3d0a0a,color:#fff,stroke:#e74c3c,stroke-width:3px
+    style ABORT_T1 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T2 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T3 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T4 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T5 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T6 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ABORT_T7 fill:#2d1010,color:#ffaaaa,stroke:#e74c3c
+    style ENERGY fill:#1a2a3d,color:#fff,stroke:#f39c12
+```
+
+</details>
 
 ---
 
-## Decisões técnicas
+## 🛸 Arquitetura
 
-**Programação funcional** — todas as funções de verificação são puras: sem estado interno, sem efeitos colaterais, mesmo input sempre produz mesmo output. Isso torna cada função testável individualmente — mandatório em sistemas de segurança crítica.
+**Funções puras** — sem efeitos colaterais; mesmo input sempre produz mesmo output. Cada verificação é testável individualmente — mandatório em sistemas de segurança crítica.
 
-**Imutabilidade** — `TelemetryReading` e `EnergyAnalysis` são dataclasses frozen. Representam uma leitura num momento específico do tempo (T-0). Não faz sentido modificar dados de telemetria após a leitura.
+**Imutabilidade** — `TelemetryReading` e `EnergyAnalysis` são snapshots em T-0. `frozen=True` é um invariante de segurança: dados de telemetria não podem ser alterados após a leitura.
 
-**Single source of truth** — os limiares de segurança são definidos uma vez na Seção 3 e reutilizados no dataset de treinamento da IA. Se o limite de energia mínima muda de 60% para 65%, muda em um lugar e propaga para o sistema inteiro.
+**Fonte única da verdade** — os limiares de segurança são definidos uma vez na Seção 3 e reutilizados tanto nas verificações quanto no treinamento da IA. Uma mudança propaga para o sistema inteiro.
 
-**Dados de referência reais** — os limiares operacionais vêm de documentação técnica da NASA e ESA. Valores sem dataset de origem são marcados como `# SIMULATED` no código e documentados em `telemetry_reference.md`.
+**Estratégia fail-fast** — as 7 verificações rodam em sequência; a primeira falha aborta imediatamente. Padrão clássico de sistemas críticos.
 
-**Escolha dos modelos de IA** — o padrão de anomalia neste problema é uma disjunção de condições por feature (OR de thresholds). IsolationForest detecta isso estatisticamente, sem regras explícitas. DecisionTreeClassifier aprende exatamente esse tipo de fronteira — geometricamente compatível com o problema. Se os limiares foram bem definidos, a árvore os redescobre: é uma validação indireta do checklist.
+**Redundância por consenso** — dois modelos independentes (supervisionado + não supervisionado) rodam em paralelo; o risco só é classificado como baixo quando há concordância. Reduz falsos negativos sem depender de um único ponto de falha.
 
 ---
 
-## Resultado da execução
+## 👾 Modelos de IA
+
+| Modelo | Tipo | Recall | Justificativa |
+|---|---|---|---|
+| IsolationForest | Não supervisionado | 94,8% | Detecta desvios do padrão nominal sem precisar de anomalias rotuladas — robusto quando eventos anômalos são raros |
+| DecisionTreeClassifier | Supervisionado | 99,8% ± 0,4% (CV 5-fold) | Aprende regras if-then — mesma geometria do checklist; redescobre os limiares de segurança autonomamente |
+
+Em sistemas de segurança crítica, **recall é a métrica prioritária**: uma anomalia não detectada é mais perigosa do que um abort desnecessário. Usar os dois modelos e comparar o consenso é mais confiável do que depender de um único.
+
+O padrão de anomalia deste problema é uma disjunção de condições por feature — exatamente a geometria que a DecisionTree aprende. A árvore redescobre autonomamente os limiares codificados à mão (ex.: `energy_pct ≤ 62 → ANOMALIA`), funcionando como uma validação indireta do checklist de segurança.
+
+---
+
+## 📡 Resultado
+
+**Telemetria e checklist completo:**
 
 ```
 ============================================================
@@ -95,6 +176,12 @@ PRE-LAUNCH VERIFICATION CHECKLIST
   >>> PRONTO PARA DECOLAR <<<
 
 ============================================================
+```
+
+**Avaliação de risco com base nos dois modelos de IA:**
+
+```
+============================================================
 AI RISK ASSESSMENT — AURORA SIGER
 ============================================================
   Data classification
@@ -113,89 +200,85 @@ AI RISK ASSESSMENT — AURORA SIGER
 ============================================================
 ```
 
-> **Por que a DecisionTree atinge 100% de recall?** A árvore aprende regras if-then — a mesma estrutura lógica do checklist. Em dados sintéticos gerados a partir de limites fixos, ela redescobre os próprios limiares codificados na Seção 3 (ex.: `structural_integrity <= 0.5 → ANOMALIA`, `energy_pct <= 62 → ANOMALIA`). Esse resultado ilustra a conexão entre a abordagem determinística e a abordagem de Machine Learning.
+> [!TIP]
+> **Por que a DecisionTree atinge 100% de recall?** O padrão de anomalia é uma disjunção de condições por feature — a árvore aprende exatamente esse tipo de fronteira e redescobre os limiares codificados à mão (ex.: `energy_pct <= 62 → ANOMALIA`, `structural_integrity <= 0.5 → ANOMALIA`). É uma validação indireta do checklist.
 
 ---
 
-## Estrutura do repositório
+## 🚀 Como executar
+
+**Pré-requisitos:** Python 3.9+
+
+Clone, instale e execute:
+
+```bash
+git clone https://github.com/juliaramosguides/fiap-fase-1-aurora-siger.git
+cd fiap-fase-1-aurora-siger
+pip install -r requirements.txt
+jupyter notebook aurora_siger_report.ipynb
+```
+
+Na interface: **`Kernel → Restart & Run All`**
+
+> [!TIP]
+> **VS Code / Cursor:** abra o `.ipynb` com a extensão Jupyter e use **Run All**. A primeira célula verifica as dependências automaticamente.
+
+## 🌌 Estrutura
 
 ```
 fiap-fase-1-aurora-siger/
-├── aurora_siger_report.ipynb     ← notebook principal (execute aqui)
-├── verification_flowchart.md     ← algoritmo de decisão em Mermaid
-├── telemetry_reference.md        ← valores e faixas seguras com fontes
-├── requirements.txt              ← dependências com versões mínimas
+├── aurora_siger_report.ipynb   ← notebook principal
+├── telemetry.md                ← limiares operacionais e fontes detalhadas
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## Como executar
-
-**Pré-requisitos:** Python 3.9+
-
-```bash
-# Clone o repositório
-git clone https://github.com/juliaramosguedes/fiap-fase-1-aurora-siger.git
-cd fiap-fase-1-aurora-siger
-
-# Instale as dependências
-pip install -r requirements.txt
-```
-
-```bash
-# Abra o notebook
-jupyter notebook aurora_siger_report.ipynb
-```
-
-Na interface que abrir: **`Kernel → Restart & Run All`**
-
-A primeira célula verifica automaticamente se todas as dependências estão disponíveis.
-
-> **VS Code / Cursor:** abra `aurora_siger_report.ipynb` com a extensão Jupyter instalada e use **Run All**.
-
----
-
-## Fontes dos dados
+## 🔭 Fontes
 
 | Parâmetro | Fonte |
 |---|---|
-| Temperatura operacional de eletrônicos | MIT OCW — *Satellite Engineering* (Keesee, 2003) |
+| Temperatura de eletrônicos | MIT OCW — *Satellite Engineering* (Keesee, 2003) |
 | Temperatura de estrutura / painéis | ESA Bulletin 87 — *Spacecraft Thermal Control* |
-| Integridade estrutural (flag 0/1) | ESA Mars Express dataset — `right_flag` (Breskvar et al., 2022) |
+| Integridade estrutural (flag 0/1) | ESA Mars Express — `right_flag` (Breskvar et al., 2022) |
 | Energia mínima para decolagem (60%) | ESA Advanced Concepts Team (2021) |
 | Pressão de tanques | NASA SBIR — *Spacecraft Thermal Management* |
 | Módulos críticos | ESA ESOC — Mars Express subsystems |
 | Padrão de anomalias para IA | NASA SMAP/MSL — Hundman et al., KDD 2018 |
 
-Valores marcados como `# SIMULATED` no notebook foram criados com base em ordens de grandeza documentadas. Consulte `telemetry_reference.md` para detalhes completos.
+> [!NOTE]
+> Valores marcados como `# SIMULATED` no código foram estimados com base em ordens de grandeza documentadas. Consulte [`telemetry.md`](telemetry.md) para as justificativas completas.
 
 ---
 
-## Reflexão Crítica
+## 🪐 Reflexão Crítica
 
 ### Ética e responsabilidade na tomada de decisão
 
-O algoritmo decide, com base em dados, se uma decolagem deve ou não ocorrer — uma decisão que envolve vidas e recursos irreversíveis. A escolha de arquitetura — funções puras, verificações independentes, output binário claro — não é apenas técnica: é uma escolha ética.
+O algoritmo decide, com base em dados, se uma decolagem deve ou não ocorrer — uma decisão que envolve vidas e recursos irreversíveis. A escolha de arquitetura não é apenas técnica: é uma resposta ética deliberada.
 
-A análise por IA reforça essa responsabilidade. Modelos de classificação operam como "caixas pretas" — e em contextos de segurança crítica, **recall é mais importante que precision**: um falso negativo (anomalia não detectada) é mais perigoso que um abort desnecessário. O modelo não substitui o operador humano; é uma ferramenta de suporte.
+A ISO 26000 (ABNT, 2010) estabelece **accountability** como princípio central de responsabilidade social: quem responde pelas decisões tomadas com base em análise de IA? O projeto responde por design. As 7 funções de verificação são puras e auditáveis individualmente. O output da IA é explicitamente classificado como "ferramenta de suporte" — o operador humano tem a palavra final, e o sistema foi construído para que essa hierarquia seja inviolável. A escolha de priorizar recall sobre precision também é uma escolha de valores: uma anomalia não detectada é mais perigosa que um abort desnecessário.
 
-A ISO 26000 (ABNT, 2010) estabelece **accountability** como princípio central de responsabilidade social: quem responde pelas decisões tomadas com base em análise de IA? Essa pergunta é real em missões espaciais.
-
-### Impacto social da exploração espacial
-
-A exploração espacial consome recursos energéticos e materiais intensivos. O conceito de **Triple Bottom Line** (D'Hont, 2019) — People, Planet, Profit — obriga perguntar: quem se beneficia? A que custo planetário? Qual o retorno justificável?
-
-O Brasil gerou mais de 2 milhões de toneladas de lixo eletrônico em 2019, reciclando menos de 3% desse volume (The Global E-Waste Monitor, 2020). A cadeia produtiva de equipamentos espaciais contribui para esse fluxo.
+Outra prática ética presente no código: valores sem dataset de origem são marcados com `# SIMULATED`. Declarar explicitamente o que se sabe e o que é estimativa — não apenas o resultado final — é a primeira responsabilidade do cientista de dados.
 
 ### Sustentabilidade tecnológica
 
-A tensão mais honesta disponível nos dados desta missão: **a mesma IA usada para otimizar o consumo de energia também o consome em volume crescente**. Data centers já respondem por ~2% do consumo elétrico global (The Green Grid, 2023), e esse percentual cresce com IA, big data e blockchain.
+Este projeto carrega uma contradição interna: a Seção 4 calcula eficiência energética (η, perdas I²R, autonomia em horas) enquanto a Seção 5 treina modelos de machine learning — que também consomem energia para operar. Não é apenas uma tensão abstrata: ela existe dentro do próprio notebook.
 
-O PROCEL evitou 140 milhões de toneladas de CO₂ entre 1990 e 2022. O IPCC (2023) projeta que eficiência energética pode contribuir com 40% da redução de emissões até 2030.
+Em escala global, data centers já respondem por ~2% do consumo elétrico (The Green Grid, 2023), e esse percentual cresce com IA e big data. O PROCEL evitou 140 milhões de toneladas de CO₂ entre 1990 e 2022. O IPCC (2023) projeta que eficiência energética pode contribuir com 40% da redução de emissões até 2030. A computação que mede eficiência precisa também ser medida por ela.
+
+### Impacto social da exploração espacial
+
+A exploração espacial consome recursos energéticos e materiais intensivos — incluindo eletrônicos cujo ciclo de vida não termina no lançamento. O conceito de **Triple Bottom Line** (D'Hont, 2019) — People, Planet, Profit — obriga perguntar: quem se beneficia? A que custo planetário? Qual o retorno justificável?
+
+O lixo eletrônico é um elo dessa cadeia frequentemente invisível. O Brasil gerou mais de 2 milhões de toneladas em 2019, reciclando menos de 3% (The Global E-Waste Monitor, 2020). Satélites e sistemas embarcados contribuem para esse fluxo através de componentes especializados, materiais raros e infraestrutura de suporte que raramente tem destino de reciclagem documentado.
 
 ### Consideração final
 
-A trajetória da computação — do ábaco ao transistor, do ENIAC (150 kW) ao chip moderno — é uma narrativa de eficiência crescente com responsabilidade crescente. Construir sistemas que tomam decisões críticas exige não apenas domínio técnico, mas consciência das implicações éticas, ambientais e sociais.
+Toda simulação carrega uma tensão entre a precisão do modelo e a imprecisão das premissas. Aurora Siger atinge 99,8% de recall na classificação de anomalias — mas parte dos parâmetros de entrada são estimativas de ordem de grandeza. A precisão matemática não apaga a incerteza das premissas. Documentar essa incerteza honestamente não é uma limitação do projeto: é sua prática ética mais concreta.
 
-Essa é a formação que a Fase 1 da FIAP propõe — e que este relatório procura demonstrar.
+Construir sistemas que tomam decisões críticas exige não apenas domínio técnico, mas consciência de que os dados têm origem, os modelos têm premissas, e as escolhas de design — recall sobre precision, auditabilidade sobre opacidade, transparência sobre resultado — são sempre escolhas de valores.
+
+> [!IMPORTANT]
+> Essa é a formação que a Fase 1 da FIAP propõe — e que este relatório procura demonstrar.
