@@ -151,4 +151,4 @@ Decisões não óbvias que afetam a interpretação dos dados:
 
 *Missão Aurora Siger · FIAP — Ciência da Computação, 2026*
 
-🧑‍🚀 [Julia Ramos](https://www.linkedin.com/in/juliaramosguedes) · [Carlos Eugenio](https://www.linkedin.com/in/carloseugenioandrade/) · [Matheus Fuchelberguer](https://www.linkedin.com/in/matheus-fuchelberguer-neves/) · Julio Guma
+🧑‍🚀 [Julia Ramos | RM568988](https://www.linkedin.com/in/juliaramosguedes) · [Carlos Eugenio | RM570285](https://www.linkedin.com/in/carloseugenioandrade/) · [Matheus Fuchelberguer | RM571321](https://www.linkedin.com/in/matheus-fuchelberguer-neves/) · [Julio Joaquim | RM569113](https://github.com/jojigoats)
